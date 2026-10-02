@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zubex Microbiología</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧫</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--zb:#1a1aff;--zbd:#0d0d99;--zbl:#e8e8ff;--bg:#f5f6fa;--wh:#fff;--tx:#1a1a2e;--tx2:#666;--bd:#e0e0ee;--ok:#1a9e3f;--wn:#e6820a;--dg:#cc2222;--dmg:#8b00b5;--sq1:#e8e8ff;--sq2:#b9b9ff;--sq3:#8080ff;--sq4:#4040f5;--sq5:#1a1aff}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+.zx-wm{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;overflow:hidden}
+.zx-wm svg{width:400px;height:400px;opacity:.055}
+.zxL{animation:zxG 3s ease-in-out infinite alternate}
+@keyframes zxG{0%{transform:scale(.85)}100%{transform:scale(1)}}
+.zxC{stroke-dasharray:700;animation:zxR 4s linear infinite}
+@keyframes zxR{0%{stroke-dashoffset:700}100%{stroke-dashoffset:0}}
+header{background:var(--wh);border-bottom:2px solid var(--zbl);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(26,26,255,.07)}
+.la{display:flex;align-items:center;gap:14px}
+.lzx{width:40px;height:40px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.bt h1{font-size:1.1rem;font-weight:700;color:var(--zb);letter-spacing:1px}
+.bt p{font-size:.7rem;color:var(--tx2);letter-spacing:2px;text-transform:uppercase}
+.dbadge{background:var(--zb);color:#fff;padding:4px 14px;border-radius:20px;font-size:.72rem;font-weight:600;letter-spacing:1px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#ccc;display:inline-block;margin-right:6px;transition:.3s}
+.sync-dot.ok{background:var(--ok)}.sync-dot.err{background:var(--dg)}.sync-dot.loading{background:var(--wn);animation:pulse .8s infinite alternate}
+@keyframes pulse{0%{opacity:.4}100%{opacity:1}}
+nav{background:var(--wh);border-bottom:1px solid var(--bd);padding:0 2rem;display:flex;position:sticky;top:64px;z-index:99;overflow-x:auto}
+.nt{padding:14px 28px;font-size:.88rem;font-weight:600;border:none;background:none;cursor:pointer;color:var(--tx2);border-bottom:3px solid transparent;transition:.2s;letter-spacing:.5px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.nt.active{color:var(--zb);border-bottom-color:var(--zb)}
+.nt:hover:not(.active){color:var(--zb);background:var(--zbl)}
+.ext-ic{font-size:.7rem;background:var(--zbl);color:var(--zb);padding:2px 6px;border-radius:4px}
+main{position:relative;z-index:1;padding:2rem;max-width:1200px;margin:0 auto}
+.section{display:none}.section.active{display:block}
+.dg{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:1rem;margin-bottom:2rem}
+.dc{background:var(--wh);border:1px solid var(--bd);border-radius:12px;padding:1.1rem;display:flex;align-items:center;gap:12px}
+.dc .ic{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.dc .inf p{font-size:.73rem;color:var(--tx2);margin-bottom:2px}
+.dc .inf h3{font-size:1.35rem;font-weight:700}
+.dc.total .ic{background:#e8e8ff}.dc.total h3{color:var(--zb)}
+.dc.ok .ic{background:#e6f9ed}.dc.ok h3{color:var(--ok)}
+.dc.warn .ic{background:#fff4e0}.dc.warn h3{color:var(--wn)}
+.dc.alert .ic{background:#ffeaea}.dc.alert h3{color:var(--dg)}
+.dc.dmg .ic{background:#f5e0ff}.dc.dmg h3{color:var(--dmg)}
+.tb{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+.tb input,.tb select{padding:8px 14px;border:1px solid var(--bd);border-radius:8px;font-size:.85rem;background:var(--wh);color:var(--tx);outline:none}
+.tb input:focus,.tb select:focus{border-color:var(--zb)}
+.tb input{flex:1;min-width:220px}
+.tb select{width:auto;flex:0 1 auto;min-width:160px;max-width:240px}
+.btn{padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.85rem;font-weight:600;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:var(--zb);color:#fff}.btn-p:hover{background:var(--zbd)}
+.btn-s{background:var(--wh);color:var(--zb);border:1px solid var(--zb)}.btn-s:hover{background:var(--zbl)}
+.btn-g{background:#1a7a38;color:#fff}.btn-g:hover{background:#155e2c}
+.btn-sm{padding:5px 10px;font-size:.77rem}
+.btn-del{background:#ffeaea;color:#aa1111;border:1px solid #ffcaca;border-radius:6px;cursor:pointer;font-size:.77rem;padding:5px 9px}
+.tw{background:var(--wh);border:1px solid var(--bd);border-radius:12px;overflow:hidden;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+thead{background:var(--zb);color:#fff}
+thead th{padding:11px 14px;text-align:left;font-weight:600;font-size:.79rem;letter-spacing:.4px;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--bd);transition:.15s}
+tbody tr:hover{background:#f0f0ff}
+tbody td{padding:10px 14px;white-space:nowrap}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.sb{padding:3px 10px;border-radius:20px;font-size:.71rem;font-weight:600;white-space:nowrap}
+.s-ok{background:#e6f9ed;color:#1a7a38}.s-warn{background:#fff4e0;color:#b36200}.s-venc{background:#ffeaea;color:#aa1111}.s-na{background:#f0f0f0;color:#888}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.mo.open{display:flex}
+.md{background:var(--wh);border-radius:16px;width:92%;max-width:740px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.mh{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.mh h2{font-size:1rem;font-weight:700;color:var(--zb)}
+.mb{padding:1.5rem}.mf{padding:1rem 1.5rem;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:.75rem;align-items:center}
+.cb{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--tx2);line-height:1}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fgr{display:flex;flex-direction:column;gap:5px}
+.fgr.full{grid-column:1/-1}
+label{font-size:.77rem;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px}
+input[type=text],input[type=date],input[type=number],input[type=password],select,textarea{padding:9px 12px;border:1px solid var(--bd);border-radius:8px;font-size:.88rem;color:var(--tx);background:var(--wh);outline:none;font-family:inherit;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--zb);box-shadow:0 0 0 3px rgba(26,26,255,.1)}
+textarea{resize:vertical;min-height:70px}
+.section-title{font-size:.8rem;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin:1.2rem 0 .6rem}
+.empty{text-align:center;padding:3rem;color:var(--tx2);font-size:.9rem}
+.toast{position:fixed;bottom:2rem;right:2rem;background:#1a1a2e;color:#fff;padding:12px 22px;border-radius:10px;font-size:.85rem;z-index:9999;transform:translateY(100px);opacity:0;transition:.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ztc{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:2rem;text-align:center}
+.ztcard{background:var(--wh);border:1px solid var(--bd);border-radius:20px;padding:3rem 4rem;max-width:500px}
+.ztlog{font-size:1.4rem;font-weight:900;color:var(--zb);letter-spacing:3px;margin-bottom:.5rem}
+.ztsub{font-size:.85rem;color:var(--tx2);margin-bottom:2rem}
+.ztbtn{background:var(--zb);color:#fff;padding:14px 48px;border-radius:40px;border:none;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:.2s;display:inline-flex;align-items:center;gap:10px}
+.ztbtn:hover{background:var(--zbd);transform:translateY(-2px)}
+.pw-box{background:var(--bg);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.pw-box h3{font-size:.9rem;font-weight:700;color:var(--zb);margin-bottom:1rem}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:1rem;margin-bottom:1.5rem}
+.ch{background:var(--wh);border:1px solid var(--bd);border-radius:12px;padding:1.1rem 1.2rem}
+.ch h4{font-size:.85rem;font-weight:700;margin-bottom:2px}
+.ch .csub{font-size:.73rem;color:var(--tx2);margin-bottom:.8rem}
+.chart-holder{position:relative}
+svg.cx{display:block;width:100%;height:auto;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:9px;font-size:.73rem;color:var(--tx2)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.tip{position:absolute;pointer-events:none;opacity:0;transition:.1s;background:#1a1a2e;color:#fff;border-radius:8px;padding:7px 10px;font-size:.75rem;z-index:10;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.bar{height:6px;border-radius:3px;background:var(--bd);overflow:hidden;min-width:70px}
+.bar>i{display:block;height:100%;border-radius:3px}
+.note{font-size:.78rem;color:var(--tx2);border-left:3px solid var(--wn);padding:8px 12px;background:var(--bg);border-radius:0 8px 8px 0;margin-top:1rem}
+@media(max-width:700px){main{padding:1rem}header,nav{padding:0 1rem}.fg{grid-template-columns:1fr}}
+@media print{nav,.tb,.mf,.btn{display:none!important}.section{display:block!important}}
+</style>
+</head>
+<body>
+<div class="zx-wm">
+  <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+    <g class="zxL" fill="none" stroke="#1a1aff" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20,55 115,55 20,175 115,175"/>
+      <line x1="145" y1="55" x2="265" y2="175"/>
+      <line x1="265" y1="55" x2="145" y2="175"/>
+    </g>
+    <polyline class="zxC" points="20,55 115,55 20,175 115,175 145,55 265,175 265,55 145,175" fill="none" stroke="#1a1aff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<header>
+  <div class="la">
+    <div class="lzx">
+      <svg viewBox="0 0 40 40" fill="none">
+        <polyline points="4,8 20,8 4,26 20,26" stroke="#1a1aff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="24" y1="8" x2="36" y2="26" stroke="#1a1aff" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="36" y1="8" x2="24" y2="26" stroke="#1a1aff" stroke-width="3.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="bt"><h1>zubex</h1><p>Departamento de Calidad</p></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <span style="font-size:.75rem;color:var(--tx2)"><span class="sync-dot loading" id="syncDot"></span><span id="syncTxt">Conectando...</span></span>
+    <span class="dbadge">MICROBIOLOGÍA ZX</span>
+  </div>
+</header>
+
+<nav>
+  <button class="nt active" onclick="showSec('monitoreo',this)">🧫 Monitoreo Ambiental</button>
+  <button class="nt" onclick="showSec('programa',this)">📅 Programa de Muestreo</button>
+  <button class="nt" onclick="showSec('calidad',this)">ZX - Calidad <span class="ext-ic">↗</span></button>
+  <button class="nt" onclick="showSec('config',this)">⚙️ Configuración</button>
+</nav>
+<main>
+
+<!-- ================= MONITOREO ================= -->
+<section class="section active" id="sec-monitoreo">
+  <div class="dg">
+    <div class="dc total"><div class="ic">🧫</div><div class="inf"><p>Muestras (periodo)</p><h3 id="dTotal">—</h3></div></div>
+    <div class="dc ok"><div class="ic">✅</div><div class="inf"><p>Conformidad</p><h3 id="dPct">—</h3></div></div>
+    <div class="dc warn"><div class="ic">⚠️</div><div class="inf"><p>En alerta</p><h3 id="dWarn">—</h3></div></div>
+    <div class="dc alert"><div class="ic">🚨</div><div class="inf"><p>Fuera de límite</p><h3 id="dAlert">—</h3></div></div>
+    <div class="dc dmg"><div class="ic">📋</div><div class="inf"><p>Desviaciones abiertas</p><h3 id="dOpen">—</h3></div></div>
+    <div class="dc" style="border-color:#aaa"><div class="ic" style="background:#fff4e0">📅</div><div class="inf"><p style="color:var(--tx2)">Puntos vencidos</p><h3 id="dVenc" style="color:var(--wn)">—</h3></div></div>
+  </div>
+
+  <div class="tb">
+    <input type="text" id="searchInput" placeholder="🔍  Buscar folio, punto, microorganismo, analista..." oninput="renderTable()">
+    <select id="filterPeriodo" onchange="renderAll()">
+      <option value="90">Últimos 90 días</option>
+      <option value="180">Últimos 6 meses</option>
+      <option value="365" selected>Últimos 12 meses</option>
+      <option value="0">Todo el histórico</option>
+    </select>
+    <select id="filterPunto" onchange="renderAll()"><option value="">Todos los puntos</option></select>
+    <select id="filterMicro" onchange="renderAll()"><option value="">Todos los microorganismos</option></select>
+    <select id="filterDict" onchange="renderAll()">
+      <option value="">Todos los dictámenes</option>
+      <option value="conforme">Conforme</option>
+      <option value="alerta">En alerta</option>
+      <option value="noconf">Fuera de límite</option>
+    </select>
+    <button class="btn btn-g" onclick="exportExcel()">📊 Excel</button>
+    <button class="btn btn-s" onclick="cargarDatos(true)">🔄 Actualizar</button>
+    <button class="btn btn-p" onclick="abrirRegistro()">＋ Registrar</button>
+  </div>
+
+  <div class="cg">
+    <div class="ch">
+      <h4>Conformidad por mes</h4>
+      <p class="csub">% de muestras dentro de límite. La línea punteada es la meta de 95%.</p>
+      <div class="chart-holder" id="chTendencia"></div>
+    </div>
+    <div class="ch">
+      <h4>Fuera de límite por punto</h4>
+      <p class="csub">Dónde se concentran las desviaciones en el periodo.</p>
+      <div class="chart-holder" id="chPuntos"></div>
+    </div>
+  </div>
+
+  <div class="ch" style="margin-bottom:1.5rem">
+    <h4>Mapa de riesgo: punto × microorganismo</h4>
+    <p class="csub">% de muestras fuera de límite. El porcentaje va impreso en cada celda.</p>
+    <div class="chart-holder" id="chMapa"></div>
+  </div>
+
+  <div class="section-title">Resultados registrados</div>
+  <div class="tw">
+    <table>
+      <thead><tr>
+        <th>Dictamen</th><th>Folio</th><th>Fecha</th><th>Punto de muestreo</th><th>Depto.</th>
+        <th>Microorganismo</th><th>Resultado</th><th>Límite</th><th>Desviación</th><th>Analista</th><th>Acciones</th>
+      </tr></thead>
+      <tbody id="tbody"><tr><td colspan="11" class="empty">⏳ Cargando...</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Desviaciones abiertas</div>
+  <div class="tw" id="twDesv"></div>
+</section>
+
+<!-- ================= PROGRAMA ================= -->
+<section class="section" id="sec-programa">
+  <div class="section-title">Calendario del programa de monitoreo ambiental</div>
+  <div class="tw" id="twPrograma"></div>
+  <p class="note">La matriz punto × microorganismo y las frecuencias se editan en el bloque <b>CATÁLOGO</b> al inicio del script de <code>index.html</code>. Cada combinación debe estar justificada por análisis de riesgo (SQF Food Packaging Ed. 9, cláusula 2.4.8).</p>
+
+  <div class="section-title">Matriz del programa</div>
+  <div class="tw" id="twMatriz"></div>
+</section>
+
+<!-- ================= ZX CALIDAD ================= -->
+<section class="section" id="sec-calidad">
+  <div class="ztc">
+    <div class="ztcard">
+      <div class="ztlog">ZX · CALIDAD</div>
+      <p class="ztsub">Equipos de medición, calibración y verificación</p>
+      <a href="https://gamabet26.github.io/ZX-Calidad/" target="_blank" rel="noopener">
+        <button class="ztbtn">Abrir ZX - Calidad ↗</button>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONFIG ================= -->
+<section class="section" id="sec-config">
+  <div class="pw-box">
+    <h3>🔐 Clave de administrador</h3>
+    <p style="font-size:.8rem;color:var(--tx2);margin-bottom:1rem">Se pide para eliminar registros. Se guarda solo en este navegador.</p>
+    <div class="fg">
+      <div class="fgr"><label>Clave actual</label><input type="password" id="pwOld"></div>
+      <div class="fgr"><label>Clave nueva</label><input type="password" id="pwNew"></div>
+    </div>
+    <button class="btn btn-p" style="margin-top:1rem" onclick="cambiarClave()">Guardar clave</button>
+  </div>
+
+  <div class="pw-box">
+    <h3>🧪 Límites y catálogo vigentes</h3>
+    <div class="tw" id="twLimites"></div>
+    <p class="note">Los límites precargados son una propuesta de arranque. Deben validarse con el análisis de riesgo de la planta y el histórico antes de usarse como criterio de liberación.</p>
+  </div>
+
+  <div class="pw-box">
+    <h3>🗄️ Conexión</h3>
+    <p style="font-size:.82rem;color:var(--tx2)">Proyecto Supabase <b>MicrobiologiaZX</b> · tabla <code id="cfgTabla"></code> · <span id="cfgEstado">—</span></p>
+    <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
+      <button class="btn btn-s" onclick="cargarDatos(true)">🔄 Reintentar conexión</button>
+      <button class="btn btn-s" onclick="cargarDemo()">🧪 Cargar datos de ejemplo (modo local)</button>
+    </div>
+    <p class="note">Si la conexión falla, el tablero sigue funcionando en <b>modo local</b>: los registros se guardan solo en este navegador hasta que la tabla exista en Supabase.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= MODAL REGISTRO ================= -->
+<div class="mo" id="moReg">
+  <div class="md">
+    <div class="mh"><h2 id="moRegTitle">＋ Registrar resultado microbiológico</h2><button class="cb" onclick="cerrar('moReg')">×</button></div>
+    <div class="mb">
+      <input type="hidden" id="fId">
+      <div class="fg">
+        <div class="fgr"><label>Fecha de muestreo *</label><input type="date" id="fFecha"></div>
+        <div class="fgr"><label>Punto de muestreo *</label><select id="fPunto" onchange="onPuntoChange()"></select></div>
+        <div class="fgr"><label>Microorganismo *</label><select id="fMicro" onchange="onMicroChange()"></select></div>
+        <div class="fgr"><label>Resultado *</label><input type="text" id="fResultado" oninput="onResultado()" placeholder="ej. 4.5"><small id="fPista" style="font-size:.72rem;color:var(--tx2)"></small></div>
+        <div class="fgr"><label>Turno</label><select id="fTurno"></select></div>
+        <div class="fgr"><label>Método de muestreo</label><select id="fMetodo"></select></div>
+        <div class="fgr"><label>Analista / laboratorio</label><input type="text" id="fAnalista" placeholder="ej. Lab. externo"></div>
+        <div class="fgr"><label>Estado de la desviación</label><select id="fEstado">
+          <option value="na">No aplica</option><option value="abierta">Abierta</option><option value="cerrada">Cerrada</option></select></div>
+        <div class="fgr full"><label>Acción correctiva / observaciones</label><textarea id="fAccion" placeholder="Limpieza profunda, re-muestreo, cambio de sanitizante..."></textarea></div>
+      </div>
+      <div style="margin-top:1rem"><span class="sb s-na" id="fDictamen">Captura un resultado</span></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-s" onclick="cerrar('moReg')">Cancelar</button>
+      <button class="btn btn-p" id="btnGuardar" onclick="guardar()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL DETALLE ================= -->
+<div class="mo" id="moDet">
+  <div class="md" style="max-width:560px">
+    <div class="mh"><h2>🔬 Detalle del resultado</h2><button class="cb" onclick="cerrar('moDet')">×</button></div>
+    <div class="mb" id="moDetBody"></div>
+    <div class="mf"><button class="btn btn-s" onclick="cerrar('moDet')">Cerrar</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* ============================================================
+   ZX · MICROBIOLOGÍA — Monitoreo ambiental de superficies
+   Proyecto Supabase: MicrobiologiaZX (bbknvvngnauophdevvgj)
+   ============================================================ */
+const SB_URL='https://bbknvvngnauophdevvgj.supabase.co';   // proyecto MicrobiologiaZX
+const SB_KEY='PEGA_AQUI_TU_ANON_KEY';  // <-- Supabase > MicrobiologiaZX > Settings > API Keys > llave publica (anon / publishable)
+const TABLE='monitoreo_micro';
+const {createClient}=supabase;
+const db=createClient(SB_URL,SB_KEY,{auth:{persistSession:false}});
+
+const META=95;                      // meta de conformidad (%)
+const PW_KEY='zxmicro_pw', LOCAL_KEY='zxmicro_local';
+
+/* ======================= CATÁLOGO =========================
+   Edita SOLO este bloque para adaptar el programa a la planta.
+   ========================================================== */
+const PUNTOS=[
+ {id:'P01',nombre:'Mesas de trabajo',             depto:'Impresión', proceso:'General',  zona:2,frec:7},
+ {id:'P02',nombre:'Rodillos de extrusión',        depto:'Extruder',  proceso:'Extrusión',zona:1,frec:30},
+ {id:'P03',nombre:'Rodillos de impresión',        depto:'Impresión', proceso:'Impresión',zona:1,frec:30},
+ {id:'P04',nombre:'Tubos / formadores corrugadora',depto:'Corrugado',proceso:'Corrugado',zona:1,frec:15},
+ {id:'P05',nombre:'Navajas de corte',             depto:'Conversion',proceso:'Corte',    zona:1,frec:15}
+];
+const MICROS=[
+ {id:'AME',nombre:'Aerobios mesófilos', corto:'Aerobios',   tipo:'cuant',unidad:'UFC/cm²',limite:10, alerta:5},
+ {id:'COL',nombre:'Coliformes totales', corto:'Coliformes', tipo:'cuant',unidad:'UFC/cm²',limite:1,  alerta:0.5},
+ {id:'MYL',nombre:'Mohos y levaduras',  corto:'Mohos y lev.',tipo:'cuant',unidad:'UFC/cm²',limite:10,alerta:5},
+ {id:'ECO',nombre:'E. coli',            corto:'E. coli',    tipo:'cual', unidad:'Ausencia / 100 cm²',limite:null,alerta:null},
+ {id:'SAL',nombre:'Salmonella spp.',    corto:'Salmonella', tipo:'cual', unidad:'Ausencia / 100 cm²',limite:null,alerta:null}
+];
+const MATRIZ={P01:['AME','COL','MYL','ECO'],P02:['AME','MYL'],P03:['AME','MYL'],
+              P04:['AME','COL','MYL','ECO','SAL'],P05:['AME','COL','MYL','ECO','SAL']};
+const TURNOS=['Turno 1','Turno 2','Turno 3'];
+const METODOS=['Hisopo (NOM-109-SSA1)','Placa de contacto (RODAC)','Esponja estéril','Petrifilm™'];
+/* ===================== FIN CATÁLOGO ======================== */
+
+let DATA=[], MODO_LOCAL=false;
+
+const $=s=>document.querySelector(s);
+const pto=id=>PUNTOS.find(p=>p.id===id);
+const mic=id=>MICROS.find(m=>m.id===id);
+const hoy=()=>new Date().toISOString().slice(0,10);
+const fx=iso=>iso?iso.split('-').reverse().join('/'):'';
+const dias=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
+function sync(estado,txt){const d=$('#syncDot');d.className='sync-dot '+estado;$('#syncTxt').textContent=txt}
+function showSec(n,b){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  $('#sec-'+n).classList.add('active'); b.classList.add('active'); if(n==='monitoreo') renderAll()}
+function cerrar(id){$('#'+id).classList.remove('open')}
+
+/* ---------------- dictamen ---------------- */
+function dictamen(microId,res){
+  const m=mic(microId); if(!m||res===''||res==null) return 'na';
+  if(m.tipo==='cual'){const v=String(res).trim().toLowerCase();
+    if(v.startsWith('aus')||v==='negativo') return 'conforme';
+    if(v.startsWith('pres')||v==='positivo') return 'noconf';
+    return 'na'}
+  const n=parseFloat(String(res).replace(',','.').replace(/[<>]/g,''));
+  if(isNaN(n)) return 'na';
+  if(m.limite!=null&&n>m.limite) return 'noconf';
+  if(m.alerta!=null&&n>=m.alerta) return 'alerta';
+  return 'conforme';
+}
+const DTXT={conforme:'Conforme',alerta:'En alerta',noconf:'Fuera de límite',na:'Sin dictamen'};
+const DCLS={conforme:'s-ok',alerta:'s-warn',noconf:'s-venc',na:'s-na'};
+const badge=d=>`<span class="sb ${DCLS[d]}">${DTXT[d]}</span>`;
+
+/* ---------------- carga de datos ---------------- */
+async function cargarDatos(aviso){
+  sync('loading','Cargando...');
+  try{
+    const {data,error}=await db.from(TABLE).select('*').order('fecha',{ascending:false}).limit(5000);
+    if(error) throw error;
+    DATA=data||[]; MODO_LOCAL=false;
+    sync('ok',`Conectado ✓ — ${DATA.length} resultados`);
+    $('#cfgEstado').textContent='conectado ✓';
+    if(aviso) toast('Datos actualizados');
+  }catch(e){
+    MODO_LOCAL=true;
+    DATA=JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');
+    sync('err','Sin conexión — modo local');
+    $('#cfgEstado').textContent='sin conexión: revisa que la tabla exista y tenga políticas de acceso';
+    if(aviso) toast('No se pudo conectar: trabajando en modo local');
+  }
+  renderAll();
+}
+function guardarLocal(){localStorage.setItem(LOCAL_KEY,JSON.stringify(DATA))}
+
+/* ---------------- filtros ---------------- */
+function filtrados(conBusqueda){
+  const d=parseInt($('#filterPeriodo').value,10);
+  const corte=d?new Date(Date.now()-d*864e5).toISOString().slice(0,10):'0000-00-00';
+  const fp=$('#filterPunto').value, fm=$('#filterMicro').value, fd=$('#filterDict').value;
+  const q=conBusqueda?$('#searchInput').value.trim().toLowerCase():'';
+  return DATA.filter(r=>r.fecha>=corte)
+    .filter(r=>!fp||r.punto_id===fp).filter(r=>!fm||r.micro_id===fm).filter(r=>!fd||r.dictamen===fd)
+    .filter(r=>!q||[r.folio,r.punto,r.microorganismo,r.analista,r.departamento].join(' ').toLowerCase().includes(q))
+    .sort((a,b)=>b.fecha.localeCompare(a.fecha)||String(b.folio).localeCompare(String(a.folio)));
+}
+
+/* ---------------- dashboard ---------------- */
+function renderDash(d){
+  const t=d.length, c=d.filter(r=>r.dictamen==='conforme').length;
+  $('#dTotal').textContent=t;
+  $('#dPct').textContent=t?Math.round(100*c/t)+'%':'—';
+  $('#dWarn').textContent=d.filter(r=>r.dictamen==='alerta').length;
+  $('#dAlert').textContent=d.filter(r=>r.dictamen==='noconf').length;
+  $('#dOpen').textContent=DATA.filter(r=>r.dictamen==='noconf'&&r.estado_desviacion==='abierta').length;
+  $('#dVenc').textContent=programa().filter(p=>p.estado==='venc').length;
+}
+
+/* ---------------- tabla principal ---------------- */
+function renderTable(){
+  const d=filtrados(true), tb=$('#tbody');
+  if(!d.length){tb.innerHTML='<tr><td colspan="11" class="empty">Sin resultados para este filtro.</td></tr>';return}
+  const TOPE=300, vis=d.slice(0,TOPE);
+  tb.innerHTML=vis.map(r=>{
+    const m=mic(r.micro_id);
+    const lim=m?(m.tipo==='cual'?'Ausencia':m.limite+' '+m.unidad):'—';
+    const desv=r.dictamen==='noconf'
+      ? `<span class="sb ${r.estado_desviacion==='cerrada'?'s-ok':'s-venc'}">${r.estado_desviacion==='cerrada'?'Cerrada':'Abierta'}</span>`
+      : '<span style="color:var(--tx2)">—</span>';
+    return `<tr>
+      <td>${badge(r.dictamen)}</td>
+      <td><b>${esc(r.folio)}</b></td>
+      <td>${fx(r.fecha)}</td>
+      <td>${esc(r.punto)}</td>
+      <td>${esc(r.departamento||'—')}</td>
+      <td>${esc(r.microorganismo)}</td>
+      <td class="num"><b>${esc(r.resultado)}</b> <span style="color:var(--tx2);font-size:.9em">${esc(r.unidad||'')}</span></td>
+      <td class="num" style="color:var(--tx2)">${lim}</td>
+      <td>${desv}</td>
+      <td>${esc(r.analista||'—')}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-s btn-sm" onclick="verDetalle('${r.id}')">👁</button>
+        <button class="btn btn-s btn-sm" onclick="editar('${r.id}')">✏️</button>
+        <button class="btn-del" onclick="borrar('${r.id}')">🗑</button>
+      </td></tr>`}).join('')
+    + (d.length>TOPE?`<tr><td colspan="11" style="text-align:center;color:var(--tx2);padding:14px">
+        Mostrando los ${TOPE} más recientes de ${d.length}. Afina los filtros o exporta a Excel para ver todo.</td></tr>`:'');
+}
+
+/* ---------------- desviaciones ---------------- */
+function renderDesv(){
+  const l=DATA.filter(r=>r.dictamen==='noconf'&&r.estado_desviacion!=='cerrada').sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const n=$('#twDesv');
+  if(!l.length){n.innerHTML='<p class="empty">No hay desviaciones abiertas 👌</p>';return}
+  n.innerHTML=`<table><thead><tr><th>Folio</th><th>Fecha</th><th>Punto</th><th>Microorganismo</th>
+    <th>Resultado</th><th>Días abierta</th><th>Acción correctiva</th><th></th></tr></thead><tbody>`+
+    l.map(r=>{const dd=dias(r.fecha,hoy());return `<tr>
+      <td><b>${esc(r.folio)}</b></td><td>${fx(r.fecha)}</td><td>${esc(r.punto)}</td><td>${esc(r.microorganismo)}</td>
+      <td class="num">${esc(r.resultado)}</td>
+      <td class="num" style="color:${dd>14?'var(--dg)':'inherit'};font-weight:600">${dd}</td>
+      <td style="white-space:normal;max-width:320px">${esc(r.accion_correctiva)||'<i style="color:var(--tx2)">Sin registrar</i>'}</td>
+      <td><button class="btn btn-s btn-sm" onclick="cerrarDesv('${r.id}')">Marcar cerrada</button></td></tr>`}).join('')+
+    '</tbody></table>';
+}
+
+/* ---------------- programa de muestreo ---------------- */
+function programa(){
+  return PUNTOS.map(p=>{
+    const ms=DATA.filter(r=>r.punto_id===p.id).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+    const ult=ms.length?ms[0].fecha:null;
+    const tr=ult?dias(ult,hoy()):null, rest=ult?p.frec-tr:null;
+    let estado='nd';
+    if(ult!=null) estado=rest<0?'venc':rest<=Math.max(1,Math.round(p.frec*.2))?'warn':'ok';
+    const prox=ult?new Date(new Date(ult).getTime()+p.frec*864e5).toISOString().slice(0,10):null;
+    return {p,ult,tr,rest,estado,prox,n:ms.length};
+  });
+}
+const PTXT={ok:'Vigente',warn:'Por vencer',venc:'Vencido',nd:'Sin muestreo'};
+const PCOL={ok:'var(--ok)',warn:'var(--wn)',venc:'var(--dg)',nd:'#aaa'};
+function renderPrograma(){
+  const f=programa().sort((a,b)=>(a.rest==null?-1e9:a.rest)-(b.rest==null?-1e9:b.rest));
+  $('#twPrograma').innerHTML=`<table><thead><tr><th>Punto de muestreo</th><th>Proceso</th><th>Depto.</th><th>Zona</th>
+    <th>Frecuencia</th><th>Último muestreo</th><th>Próximo</th><th>Estado</th><th>Avance del ciclo</th></tr></thead><tbody>`+
+    f.map(x=>{const pct=x.tr==null?0:Math.min(100,Math.round(100*x.tr/x.p.frec));return `<tr>
+      <td><b>${x.p.nombre}</b></td><td>${x.p.proceso}</td><td>${x.p.depto}</td><td>Zona ${x.p.zona}</td>
+      <td class="num">cada ${x.p.frec} días</td>
+      <td>${x.ult?fx(x.ult)+` <span style="color:var(--tx2)">(hace ${x.tr} d)</span>`:'—'}</td>
+      <td>${x.prox?fx(x.prox):'—'}</td>
+      <td><span class="sb ${x.estado==='ok'?'s-ok':x.estado==='warn'?'s-warn':x.estado==='venc'?'s-venc':'s-na'}">${PTXT[x.estado]}</span></td>
+      <td><div class="bar"><i style="width:${pct}%;background:${PCOL[x.estado]}"></i></div></td></tr>`}).join('')+'</tbody></table>';
+
+  $('#twMatriz').innerHTML=`<table><thead><tr><th>Punto de muestreo</th><th>Frecuencia</th>`+
+    MICROS.map(m=>`<th>${m.nombre}</th>`).join('')+`</tr></thead><tbody>`+
+    PUNTOS.map(p=>`<tr><td><b>${p.nombre}</b></td><td class="num">cada ${p.frec} días</td>`+
+      MICROS.map(m=>{const a=(MATRIZ[p.id]||[]).includes(m.id);
+        return `<td style="text-align:center;color:${a?'var(--ok)':'#bbb'};font-weight:${a?700:400}">${a?'✓':'·'}</td>`}).join('')+
+      `</tr>`).join('')+'</tbody></table>';
+
+  $('#twLimites').innerHTML=`<table><thead><tr><th>Microorganismo</th><th>Tipo</th><th>Unidad</th><th>Nivel de alerta</th><th>Límite</th></tr></thead><tbody>`+
+    MICROS.map(m=>`<tr><td><b>${m.nombre}</b></td><td>${m.tipo==='cual'?'Cualitativo':'Cuantitativo'}</td>
+      <td>${m.unidad}</td><td class="num">${m.alerta??'—'}</td>
+      <td class="num">${m.tipo==='cual'?'Ausencia':m.limite}</td></tr>`).join('')+'</tbody></table>';
+}
+
+/* ================== GRÁFICAS (SVG, sin librerías) ================== */
+const NS='http://www.w3.org/2000/svg';
+const sv=(n,a={},t)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!==undefined)e.textContent=t;return e};
+const cv=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function tipOf(h){let t=h.querySelector('.tip');if(!t){t=document.createElement('div');t.className='tip';h.appendChild(t)}return t}
+function tipShow(h,t,x,y,html){t.innerHTML=html;t.style.opacity='1';const w=h.clientWidth,tw=t.offsetWidth;
+  t.style.left=Math.max(2,Math.min(x-tw/2,w-tw-2))+'px';t.style.top=Math.max(0,y-t.offsetHeight-10)+'px'}
+function vac(h,m){h.innerHTML='<p class="empty" style="padding:2rem 0">'+m+'</p>'}
+function ink(hex){const v=hex.replace('#','');const n=parseInt(v.length===3?v.split('').map(c=>c+c).join(''):v,16);
+  const c=x=>{x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)};
+  return .2126*c(n>>16&255)+.7152*c(n>>8&255)+.0722*c(n&255)>.42?'#1a1a2e':'#fff'}
+
+function gLinea(h,s){
+  h.innerHTML=''; if(!s.length) return vac(h,'Sin muestras en el periodo.');
+  const W=640,H=230,m={t:12,r:16,b:28,l:38},iw=W-m.l-m.r,ih=H-m.t-m.b;
+  const g=sv('svg',{viewBox:`0 0 ${W} ${H}`,class:'cx',role:'img','aria-label':'Conformidad por mes'});
+  const X=i=>s.length===1?m.l+iw/2:m.l+i/(s.length-1)*iw, Y=v=>m.t+ih-v/100*ih;
+  [0,25,50,75,100].forEach(v=>{g.appendChild(sv('line',{x1:m.l,x2:m.l+iw,y1:Y(v),y2:Y(v),stroke:cv('--bd')}));
+    g.appendChild(sv('text',{x:m.l-7,y:Y(v)+4,'text-anchor':'end',fill:cv('--tx2'),'font-size':10.5},v+'%'))});
+  g.appendChild(sv('line',{x1:m.l,x2:m.l+iw,y1:Y(META),y2:Y(META),stroke:cv('--tx2'),'stroke-width':1.5,'stroke-dasharray':'5 4'}));
+  g.appendChild(sv('text',{x:m.l+iw,y:Y(META)-6,'text-anchor':'end',fill:cv('--tx2'),'font-size':10.5},'Meta '+META+'%'));
+  g.appendChild(sv('path',{d:s.map((p,i)=>(i?'L':'M')+X(i)+' '+Y(p.v)).join(' '),fill:'none',stroke:cv('--zb'),'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
+  const t=tipOf(h), paso=Math.ceil(s.length/8);
+  s.forEach((p,i)=>{
+    g.appendChild(sv('circle',{cx:X(i),cy:Y(p.v),r:4,fill:cv('--zb'),stroke:'#fff','stroke-width':2}));
+    const hit=sv('rect',{x:X(i)-16,y:m.t,width:32,height:ih,fill:'transparent',style:'cursor:pointer'});
+    hit.addEventListener('mousemove',e=>{const r=h.getBoundingClientRect();
+      tipShow(h,t,e.clientX-r.left,e.clientY-r.top,`<b>${p.lab}</b><br>${p.v}% conforme<br>${p.c} de ${p.n} muestras`)});
+    hit.addEventListener('mouseleave',()=>t.style.opacity='0'); g.appendChild(hit);
+    if(i%paso===0||i===s.length-1) g.appendChild(sv('text',{x:X(i),y:H-8,'text-anchor':'middle',fill:cv('--tx2'),'font-size':10.5},p.lab));
+  });
+  g.appendChild(sv('line',{x1:m.l,x2:m.l+iw,y1:m.t+ih,y2:m.t+ih,stroke:cv('--bd')}));
+  h.appendChild(g);
+}
+function gBarras(h,f){
+  h.innerHTML=''; if(!f.length) return vac(h,'Sin muestras en el periodo.');
+  const fh=32,W=640,m={t:6,r:50,b:20,l:168},H=m.t+f.length*fh+m.b,iw=W-m.l-m.r;
+  const max=Math.max(1,...f.map(x=>x.fuera));
+  const g=sv('svg',{viewBox:`0 0 ${W} ${H}`,class:'cx',role:'img','aria-label':'Fuera de límite por punto'});
+  const t=tipOf(h);
+  f.forEach((x,i)=>{const y=m.t+i*fh,bh=15;
+    g.appendChild(sv('text',{x:m.l-9,y:y+bh-2,'text-anchor':'end',fill:cv('--tx'),'font-size':11.5},x.lab));
+    g.appendChild(sv('rect',{x:m.l,y,width:iw,height:bh,rx:4,fill:cv('--bd'),opacity:.5}));
+    const w=x.fuera>0?Math.max(4,x.fuera/max*iw):0;
+    if(w) g.appendChild(sv('rect',{x:m.l,y,width:w,height:bh,rx:4,fill:cv('--dg')}));
+    g.appendChild(sv('text',{x:m.l+w+7,y:y+bh-3,fill:cv('--tx'),'font-size':11.5,'font-weight':600},x.fuera+' / '+x.n));
+    const hit=sv('rect',{x:0,y:y-5,width:W,height:fh-2,fill:'transparent',style:'cursor:pointer'});
+    hit.addEventListener('mousemove',e=>{const r=h.getBoundingClientRect();
+      tipShow(h,t,e.clientX-r.left,e.clientY-r.top,`<b>${x.lab}</b><br>${x.fuera} fuera de límite de ${x.n} muestras<br>${x.n?Math.round(100*x.fuera/x.n):0}% de desviación`)});
+    hit.addEventListener('mouseleave',()=>t.style.opacity='0'); g.appendChild(hit);
+  });
+  g.appendChild(sv('text',{x:m.l,y:H-5,fill:cv('--tx2'),'font-size':10},'Barra = fuera de límite · cifra = fuera de límite / muestras'));
+  h.appendChild(g);
+}
+function gMapa(h,celdas){
+  h.innerHTML='';
+  const cw=104,ch=40,m={t:40,r:8,b:6,l:168};
+  const W=m.l+MICROS.length*cw+m.r,H=m.t+PUNTOS.length*ch+m.b;
+  const g=sv('svg',{viewBox:`0 0 ${W} ${H}`,class:'cx',role:'img','aria-label':'Mapa punto por microorganismo'});
+  const ramp=['--sq1','--sq2','--sq3','--sq4','--sq5'].map(cv);
+  const nivel=p=>p<=0?ramp[0]:p<5?ramp[1]:p<15?ramp[2]:p<30?ramp[3]:ramp[4];
+  MICROS.forEach((c,j)=>g.appendChild(sv('text',{x:m.l+j*cw+cw/2,y:m.t-13,'text-anchor':'middle',fill:cv('--tx2'),'font-size':11},c.corto)));
+  const t=tipOf(h);
+  PUNTOS.forEach((p,i)=>{
+    g.appendChild(sv('text',{x:m.l-9,y:m.t+i*ch+ch/2+4,'text-anchor':'end',fill:cv('--tx'),'font-size':11.5},p.nombre));
+    MICROS.forEach((c,j)=>{
+      const d=celdas[p.id+'|'+c.id], x=m.l+j*cw+1, y=m.t+i*ch+1, w=cw-4, hh=ch-4;
+      if(!d||!d.n){g.appendChild(sv('rect',{x,y,width:w,height:hh,rx:5,fill:'none',stroke:cv('--bd'),'stroke-dasharray':'3 3'}));return}
+      const pct=Math.round(100*d.f/d.n), fill=nivel(pct);
+      g.appendChild(sv('rect',{x,y,width:w,height:hh,rx:5,fill,stroke:'#fff','stroke-width':2}));
+      g.appendChild(sv('text',{x:x+w/2,y:y+hh/2+4,'text-anchor':'middle','font-size':12,'font-weight':700,fill:ink(fill)},pct+'%'));
+      const hit=sv('rect',{x,y,width:w,height:hh,fill:'transparent',style:'cursor:pointer'});
+      hit.addEventListener('mousemove',e=>{const r=h.getBoundingClientRect();
+        tipShow(h,t,e.clientX-r.left,e.clientY-r.top,`<b>${p.nombre} · ${c.nombre}</b><br>${pct}% fuera de límite<br>${d.f} de ${d.n} muestras`)});
+      hit.addEventListener('mouseleave',()=>t.style.opacity='0'); g.appendChild(hit);
+    })});
+  h.appendChild(g);
+  const leg=document.createElement('div'); leg.className='legend';
+  leg.innerHTML=[['0%',ramp[0]],['< 5%',ramp[1]],['5–15%',ramp[2]],['15–30%',ramp[3]],['≥ 30%',ramp[4]]]
+    .map(([a,b])=>`<span><i style="background:${b};border:1px solid var(--bd)"></i>${a}</span>`).join('')
+    +'<span><i style="background:transparent;border:1px dashed var(--bd)"></i>Sin muestras</span>';
+  h.appendChild(leg);
+}
+function renderGraficas(d){
+  const mm={};
+  d.forEach(r=>{const k=r.fecha.slice(0,7);(mm[k]=mm[k]||{n:0,c:0});mm[k].n++;if(r.dictamen==='conforme')mm[k].c++});
+  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  gLinea($('#chTendencia'),Object.keys(mm).sort().map(k=>({lab:MES[+k.slice(5,7)-1]+' '+k.slice(2,4),n:mm[k].n,c:mm[k].c,v:Math.round(100*mm[k].c/mm[k].n)})));
+  gBarras($('#chPuntos'),PUNTOS.map(p=>{const s=d.filter(r=>r.punto_id===p.id);
+    return {lab:p.nombre,n:s.length,fuera:s.filter(r=>r.dictamen==='noconf').length}})
+    .filter(x=>x.n).sort((a,b)=>b.fuera-a.fuera||b.n-a.n));
+  const cel={};
+  d.forEach(r=>{const k=r.punto_id+'|'+r.micro_id;(cel[k]=cel[k]||{n:0,f:0});cel[k].n++;if(r.dictamen==='noconf')cel[k].f++});
+  gMapa($('#chMapa'),cel);
+}
+function renderAll(){const d=filtrados(false);renderDash(d);renderGraficas(d);renderTable();renderDesv();renderPrograma()}
+
+/* ================== CAPTURA ================== */
+function abrirRegistro(){
+  $('#moRegTitle').textContent='＋ Registrar resultado microbiológico';
+  $('#fId').value=''; $('#fFecha').value=hoy(); $('#fFecha').max=hoy();
+  $('#fResultado').value=''; $('#fAccion').value=''; $('#fEstado').value='na'; $('#fAnalista').value='';
+  onPuntoChange(); $('#moReg').classList.add('open');
+}
+function onPuntoChange(){
+  const p=$('#fPunto').value, ids=MATRIZ[p]||MICROS.map(m=>m.id);
+  $('#fMicro').innerHTML=MICROS.filter(m=>ids.includes(m.id)).map(m=>`<option value="${m.id}">${m.nombre}</option>`).join('');
+  onMicroChange();
+}
+function onMicroChange(){
+  const m=mic($('#fMicro').value); if(!m) return;
+  $('#fResultado').placeholder=m.tipo==='cual'?'Ausente / Presente':'ej. 4.5';
+  $('#fPista').textContent=m.tipo==='cual'?`${m.unidad} — criterio: ausencia`:`${m.unidad} — alerta ≥ ${m.alerta} · límite ${m.limite}`;
+  onResultado();
+}
+function onResultado(){
+  const d=dictamen($('#fMicro').value,$('#fResultado').value);
+  const n=$('#fDictamen'); n.className='sb '+DCLS[d];
+  n.textContent=d==='na'?'Captura un resultado':DTXT[d];
+  if(d==='noconf'&&$('#fEstado').value==='na') $('#fEstado').value='abierta';
+}
+function folioNuevo(f){
+  const pre='MB-'+f.slice(0,7).replace('-','');
+  const n=DATA.filter(r=>String(r.folio).startsWith(pre)).length+1;
+  return pre+'-'+String(n).padStart(3,'0');
+}
+async function guardar(){
+  const microId=$('#fMicro').value, res=$('#fResultado').value.trim(), d=dictamen(microId,res);
+  if(d==='na'){toast(mic(microId).tipo==='cual'?'Escribe "Ausente" o "Presente"':'El resultado debe ser un número');return}
+  const p=pto($('#fPunto').value), m=mic(microId), id=$('#fId').value;
+  const row={fecha:$('#fFecha').value,punto_id:p.id,punto:p.nombre,departamento:p.depto,zona:p.zona,
+    micro_id:m.id,microorganismo:m.nombre,resultado:res,unidad:m.unidad,
+    limite:m.tipo==='cual'?null:m.limite,dictamen:d,metodo:$('#fMetodo').value,turno:$('#fTurno').value,
+    analista:$('#fAnalista').value.trim(),estado_desviacion:$('#fEstado').value,accion_correctiva:$('#fAccion').value.trim()};
+  const b=$('#btnGuardar'); b.innerHTML='<span class="spinner"></span> Guardando'; b.disabled=true;
+  try{
+    if(MODO_LOCAL){
+      if(id){Object.assign(DATA.find(r=>String(r.id)===id),row)}
+      else{row.id='L'+Date.now();row.folio=folioNuevo(row.fecha);DATA.unshift(row)}
+      guardarLocal();
+    }else if(id){
+      const {error}=await db.from(TABLE).update(row).eq('id',id); if(error) throw error;
+      Object.assign(DATA.find(r=>String(r.id)===id),row);
+    }else{
+      row.folio=folioNuevo(row.fecha);
+      const {data,error}=await db.from(TABLE).insert(row).select(); if(error) throw error;
+      DATA.unshift(data[0]);
+    }
+    toast(id?'Resultado actualizado':'Resultado guardado'); cerrar('moReg'); renderAll();
+  }catch(e){toast('Error al guardar: '+(e.message||e))}
+  b.innerHTML='Guardar'; b.disabled=false;
+}
+function editar(id){
+  const r=DATA.find(x=>String(x.id)===String(id)); if(!r) return;
+  $('#moRegTitle').textContent='✏️ Editar '+r.folio;
+  $('#fId').value=r.id; $('#fFecha').value=r.fecha; $('#fPunto').value=r.punto_id;
+  onPuntoChange(); $('#fMicro').value=r.micro_id; onMicroChange();
+  $('#fResultado').value=r.resultado; $('#fTurno').value=r.turno||TURNOS[0]; $('#fMetodo').value=r.metodo||METODOS[0];
+  $('#fAnalista').value=r.analista||''; $('#fEstado').value=r.estado_desviacion||'na'; $('#fAccion').value=r.accion_correctiva||'';
+  onResultado(); $('#moReg').classList.add('open');
+}
+function verDetalle(id){
+  const r=DATA.find(x=>String(x.id)===String(id)); if(!r) return;
+  const m=mic(r.micro_id);
+  const fila=(a,b)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd);font-size:.85rem">
+    <span style="color:var(--tx2);font-weight:600;font-size:.77rem;text-transform:uppercase">${a}</span><span>${b}</span></div>`;
+  $('#moDetBody').innerHTML=`<div style="text-align:center;margin-bottom:1rem">${badge(r.dictamen)}
+      <div style="font-size:1.6rem;font-weight:700;margin-top:.5rem">${esc(r.resultado)} <span style="font-size:.9rem;color:var(--tx2)">${esc(r.unidad||'')}</span></div>
+      <div style="font-size:.8rem;color:var(--tx2)">Límite: ${m&&m.tipo==='cual'?'Ausencia':esc(r.limite)} ${m&&m.tipo!=='cual'?esc(r.unidad):''}</div></div>`
+    +fila('Folio','<b>'+esc(r.folio)+'</b>')+fila('Fecha',fx(r.fecha))+fila('Punto',esc(r.punto))
+    +fila('Departamento',esc(r.departamento||'—'))+fila('Zona','Zona '+esc(r.zona))
+    +fila('Microorganismo',esc(r.microorganismo))+fila('Método',esc(r.metodo||'—'))+fila('Turno',esc(r.turno||'—'))
+    +fila('Analista',esc(r.analista||'—'))
+    +fila('Desviación',r.dictamen==='noconf'?(r.estado_desviacion==='cerrada'?'Cerrada':'Abierta'):'No aplica')
+    +`<div style="margin-top:1rem"><div style="color:var(--tx2);font-weight:600;font-size:.77rem;text-transform:uppercase;margin-bottom:4px">Acción correctiva</div>
+      <div style="font-size:.85rem">${esc(r.accion_correctiva)||'<i style="color:var(--tx2)">Sin registrar</i>'}</div></div>`;
+  $('#moDet').classList.add('open');
+}
+async function cerrarDesv(id){
+  const r=DATA.find(x=>String(x.id)===String(id)); if(!r) return;
+  if(!r.accion_correctiva && !confirm('Este resultado no tiene acción correctiva registrada. ¿Cerrar de todos modos?')) return;
+  try{
+    if(!MODO_LOCAL){const {error}=await db.from(TABLE).update({estado_desviacion:'cerrada'}).eq('id',id); if(error) throw error}
+    r.estado_desviacion='cerrada'; if(MODO_LOCAL) guardarLocal();
+    toast('Desviación cerrada'); renderAll();
+  }catch(e){toast('Error: '+(e.message||e))}
+}
+async function borrar(id){
+  const r=DATA.find(x=>String(x.id)===String(id)); if(!r) return;
+  const pw=localStorage.getItem(PW_KEY)||'zubex';
+  if(prompt('Clave de administrador para eliminar '+r.folio+':')!==pw){toast('Clave incorrecta');return}
+  try{
+    if(!MODO_LOCAL){const {error}=await db.from(TABLE).delete().eq('id',id); if(error) throw error}
+    DATA=DATA.filter(x=>String(x.id)!==String(id)); if(MODO_LOCAL) guardarLocal();
+    toast('Registro eliminado'); renderAll();
+  }catch(e){toast('Error: '+(e.message||e))}
+}
+function cambiarClave(){
+  const act=localStorage.getItem(PW_KEY)||'zubex';
+  if($('#pwOld').value!==act){toast('La clave actual no coincide');return}
+  if($('#pwNew').value.length<4){toast('La clave nueva debe tener al menos 4 caracteres');return}
+  localStorage.setItem(PW_KEY,$('#pwNew').value); $('#pwOld').value=''; $('#pwNew').value=''; toast('Clave actualizada');
+}
+
+/* ================== EXCEL ================== */
+function exportExcel(){
+  const d=filtrados(true);
+  if(!d.length){toast('No hay datos para exportar');return}
+  const filas=d.map(r=>({Folio:r.folio,Fecha:r.fecha,'Punto de muestreo':r.punto,Departamento:r.departamento,
+    Zona:r.zona,Microorganismo:r.microorganismo,Resultado:r.resultado,Unidad:r.unidad,
+    'Limite':r.limite??'Ausencia',Dictamen:DTXT[r.dictamen],'Metodo':r.metodo,Turno:r.turno,
+    Analista:r.analista,'Estado desviacion':r.estado_desviacion,'Accion correctiva':r.accion_correctiva}));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(filas),'Resultados');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(programa().map(x=>({
+    'Punto':x.p.nombre,'Proceso':x.p.proceso,'Departamento':x.p.depto,'Zona':x.p.zona,
+    'Frecuencia (dias)':x.p.frec,'Ultimo muestreo':x.ult||'—','Proximo':x.prox||'—','Estado':PTXT[x.estado]}))),'Programa');
+  XLSX.writeFile(wb,`ZX-Microbiologia-${hoy()}.xlsx`);
+  toast('Excel generado');
+}
+
+/* ================== DATOS DE PRUEBA (modo local) ================== */
+function cargarDemo(){
+  if(!MODO_LOCAL){toast('Los datos de ejemplo solo se cargan en modo local');return}
+  const an=['Lab. interno','Lab. externo','Lab. interno','Lab. externo CIATEJ'];
+  PUNTOS.forEach(p=>{for(let d=360;d>=0;d-=p.frec){
+    const fecha=new Date(Date.now()-d*864e5).toISOString().slice(0,10);
+    (MATRIZ[p.id]||[]).forEach(mid=>{const m=mic(mid);let res;
+      if(m.tipo==='cual') res=Math.random()<.012?'Presente':'Ausente';
+      else{const base=p.zona===1?.28:.42,r=Math.random();let v=m.limite*base*(.2+Math.random());
+        if(r>.965) v=m.limite*(1.05+Math.random()*1.2); else if(r>.9) v=m.limite*(.55+Math.random()*.4);
+        res=String(Math.round(v*100)/100)}
+      const dic=dictamen(mid,res);
+      DATA.push({id:'L'+Math.random().toString(36).slice(2),folio:folioNuevo(fecha),fecha,punto_id:p.id,punto:p.nombre,
+        departamento:p.depto,zona:p.zona,micro_id:mid,microorganismo:m.nombre,resultado:res,unidad:m.unidad,
+        limite:m.tipo==='cual'?null:m.limite,dictamen:dic,metodo:METODOS[0],turno:TURNOS[0],
+        analista:an[Math.floor(Math.random()*an.length)],
+        estado_desviacion:dic==='noconf'?(Math.random()<.7?'cerrada':'abierta'):'na',
+        accion_correctiva:dic==='noconf'?'Limpieza profunda y re-muestreo a las 24 h':''})})}});
+  guardarLocal(); renderAll(); toast('Datos de ejemplo cargados ('+DATA.length+')');
+}
+
+/* ================== INICIO ================== */
+function init(){
+  $('#fPunto').innerHTML=PUNTOS.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+  $('#filterPunto').innerHTML='<option value="">Todos los puntos</option>'+PUNTOS.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+  $('#filterMicro').innerHTML='<option value="">Todos los microorganismos</option>'+MICROS.map(m=>`<option value="${m.id}">${m.nombre}</option>`).join('');
+  $('#fTurno').innerHTML=TURNOS.map(t=>`<option>${t}</option>`).join('');
+  $('#fMetodo').innerHTML=METODOS.map(t=>`<option>${t}</option>`).join('');
+  $('#cfgTabla').textContent=TABLE;
+  document.querySelectorAll('.mo').forEach(mo=>mo.addEventListener('click',e=>{if(e.target===mo)mo.classList.remove('open')}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open'))});
+  cargarDatos(false);
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
